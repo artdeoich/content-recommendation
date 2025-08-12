@@ -3,6 +3,6 @@
 # azure-monitor-opentelemetry 
 
 azure-functions==1.20.0
-pandas==2.2.2
-numpy==1.26.4
+pandas==1.5.3
+numpy==1.23.5
 scikit-learn==1.5.1
