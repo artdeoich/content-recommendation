@@ -11,7 +11,9 @@ user_id = st.selectbox("Choisir un utilisateur", USER_IDS)
 
 if st.button("Afficher recommandations"):
     # Appel à l'API Flask
-    url = f"http://localhost:7071/api/recommendation/{user_id}"
+    #url = f"http://localhost:7071/api/recommendation/{user_id}"
+    url = f"https://content-recommendation-fngjfxc6bsfdh4cr.canadacentral-01.azurewebsites.net/api/recommendation/{user_id}"
+
     response = requests.get(url)
     
     if response.status_code == 200:
