@@ -1,5 +1,6 @@
 import logging
 import azure.functions as func
+from azure.storage.blob import BlobServiceClient
 import pandas as pd
 import numpy as np
 import pickle
@@ -9,8 +10,12 @@ import json
 
 # --- Chargement des données ---
 def load_embeddings():
-    with open("articles_embeddings.pickle", "rb") as f:
-        return pickle.load(f)
+    connect_str = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
+    blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+    blob_client = blob_service_client.get_blob_client(container="models", blob="articles_embeddings.pkl")
+
+    download_stream = blob_client.download_blob()
+    return pickle.loads(download_stream.readall())
 
 def load_metadata():
     return pd.read_csv("articles_metadata.csv")
