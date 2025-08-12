@@ -10,12 +10,9 @@ import json
 
 # --- Chargement des données ---
 def load_embeddings():
-    connect_str = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
-    blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-    blob_client = blob_service_client.get_blob_client(container="models", blob="articles_embeddings.pkl")
-
-    download_stream = blob_client.download_blob()
-    return pickle.loads(download_stream.readall())
+    file_path = "/file/articles_embeddings.pkl"
+    with open(file_path, "rb") as f:
+        return pickle.load(f)
 
 def load_metadata():
     return pd.read_csv("articles_metadata.csv")
