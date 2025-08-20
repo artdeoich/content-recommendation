@@ -1,20 +1,19 @@
 {
+  "scriptFile": "__init__.py",
   "bindings": [
     {
-      "authLevel": "anonymous",
+      "authLevel": "function",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
       "methods": ["get", "post"],
-      "route": "recommendation/{userId}",
-      "webHookType": "genericJson"
+      "route": "recommendations/surprise/{userId:int}"
     },
     {
       "type": "http",
       "direction": "out",
       "name": "$return"
     }
-  ],
-  "scriptFile": "__init__.py",
-  "entryPoint": "main"
+  ]
 }
+

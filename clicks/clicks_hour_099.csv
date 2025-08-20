@@ -1,3 +1,3 @@
-user_id,session_id,session_start,session_size,click_article_id,click_timestamp,click_environment,click_deviceGroup,click_os,click_country,click_region,click_referrer_type
-3378,1507183355268309,1507183355000,2,220345,1507213178772,4,1,17,1,16,1
-3378,1507183355268309,1507183355000,2,123909,1507213208772,4,1,17,1,16,1
+version https://git-lfs.github.com/spec/v1
+oid sha256:72d8031d248a3270fc21c9565eacdf6cf435c027cb22f5917d532e0cd159cefd
+size 320

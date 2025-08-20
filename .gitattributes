@@ -1,1 +1,5 @@
 *.pickle filter=lfs diff=lfs merge=lfs -text
+*.pkl filter=lfs diff=lfs merge=lfs -text
+*.csv filter=lfs diff=lfs merge=lfs -text
+file/recommendation_model_surprise.pkl filter=lfs diff=lfs merge=lfs -text
+file/implicit_model.pkl filter=lfs diff=lfs merge=lfs -text
