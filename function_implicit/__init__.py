@@ -7,6 +7,7 @@ import os
 import pickle
 from implicit.als import AlternatingLeastSquares
 from scipy.sparse import coo_matrix
+from utils import get_file_path
 
 # --- Chargement des données ---
 metadata = pd.read_csv("articles_metadata.csv")
@@ -28,7 +29,7 @@ matrix = coo_matrix(
 ).tocsr()
 
 # --- Charger modèle implicit pré-entraîné depuis /file ---
-with open("/file/implicit_model.pkl", "rb") as f:
+with open(get_file_path("implicit_model.pkl"), "rb") as f:
     model: AlternatingLeastSquares = pickle.load(f)
 
 # --- Recommandations ---

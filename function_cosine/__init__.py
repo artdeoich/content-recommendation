@@ -6,10 +6,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 import json
 import os
 import pickle
+from utils import get_file_path
 
 # --- Chargement des données ---
 def load_embeddings():
-    file_path = "/file/articles_embeddings.pkl"  # chemin monté par Azure
+    file_path = get_file_path("articles_embeddings.pkl")  # chemin monté par Azure
     with open(file_path, "rb") as f:
         return pickle.load(f)
 
@@ -60,6 +61,7 @@ def recommend_for_user(user_id, top_k=5):
 
 # --- Point d'entrée Azure ---
 def main(req: func.HttpRequest) -> func.HttpResponse:
+
     logging.info("Python HTTP trigger function processed a request.")
 
     # Récupération du userId depuis la route ou le body

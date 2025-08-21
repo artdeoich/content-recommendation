@@ -4,9 +4,10 @@ import pandas as pd
 import pickle
 import json
 import os
+from utils import get_file_path
 
 # --- Charger le modèle Surprise depuis /file ---
-with open("/file/recommendation_model_surprise.pkl", "rb") as f:
+with open(get_file_path("recommendation_model_surprise.pkl"), "rb") as f:
     model = pickle.load(f)
 
 # --- Charger les données ---

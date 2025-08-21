@@ -3,8 +3,8 @@ import requests
 import pandas as pd
 
 USER_IDS = [1, 2, 3, 4, 5, 123]  
-#BASE_URL = "https://content-recommendation-fngjfxc6bsfdh4cr.canadacentral-01.azurewebsites.net/api"
-BASE_URL = "http://localhost:7071//api"
+BASE_URL = "https://content-recommendation-fngjfxc6bsfdh4cr.canadacentral-01.azurewebsites.net/api"
+#BASE_URL = "http://localhost:7071/api"
 
 st.title("Recommandation d'articles - 3 méthodes")
 
