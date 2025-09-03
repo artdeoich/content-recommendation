@@ -9,7 +9,8 @@
     },
     "fileLoggingMode": "always",
     "logLevel": {
-      "Function": "Information"
+      "default": "Information",
+      "Function": "Debug"
     }
   },
   "extensionBundle": {
