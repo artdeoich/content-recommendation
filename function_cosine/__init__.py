@@ -29,7 +29,7 @@ def load_embeddings():
 
 
 def load_metadata():
-    file_path = "articles_metadata.csv"
+    file_path = get_file_path("articles_metadata.csv")
     print(f"Chemin metadata : {file_path}")
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Le fichier {file_path} est introuvable sur Azure.")
@@ -75,10 +75,10 @@ def init_data():
             )
 
         metadata["embedding"] = list(embeddings)
-        print("✅ Chargement initial terminé")
+        print("Chargement initial terminé")
         cold_start_done = True
     except Exception as e:
-        print("❌ Erreur pendant l'initialisation :", e)
+        print("Erreur pendant l'initialisation :", e)
         traceback.print_exc()
         raise
 
