@@ -35,6 +35,11 @@ def load_metadata():
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Le fichier {file_path} est introuvable sur Azure.")
     df = pd.read_csv(file_path)
+    
+    # Affiche les 5 premières lignes
+    print("Aperçu des 5 premières lignes :")
+    print(df.head())
+
     print(f"Nombre de lignes metadata : {len(df)}")
     return df
 
