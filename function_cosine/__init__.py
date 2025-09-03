@@ -8,6 +8,18 @@ import os
 import pickle
 from utils import get_file_path
 
+
+import os
+import traceback
+
+file_path = get_file_path("articles_embeddings.pkl")
+print(f"Chemin retourné par get_file_path : {file_path}")
+
+if os.path.exists(file_path):
+    print("✅ Le fichier articles_embeddings.pkl existe !")
+else:
+    print("❌ Le fichier articles_embeddings.pkl N'EXISTE PAS !")
+
 # --- Chargement des données ---
 def load_embeddings():
     try:
