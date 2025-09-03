@@ -39,18 +39,26 @@ def load_metadata():
 
 
 def load_clicks():
-    clicks_folder = "clicks"
-    print(f"Vérification du dossier clicks : {clicks_folder}")
+    # Chemin absolu basé sur l'emplacement du fichier __init__.py
+    base_dir = os.path.dirname(os.path.dirname(__file__))  # <- remonte d'un dossier
+    clicks_folder = os.path.join(base_dir, "clicks")
+
+    print(f"🔍 Vérification du dossier clicks : {clicks_folder}")
+
     if not os.path.exists(clicks_folder) or not os.path.isdir(clicks_folder):
         raise FileNotFoundError(f"Le dossier {clicks_folder} est introuvable sur Azure.")
+
     all_clicks = []
     for filename in os.listdir(clicks_folder):
         if filename.endswith(".csv"):
             file_path = os.path.join(clicks_folder, filename)
+            print(f"➡️ Lecture du fichier : {file_path}")
             df = pd.read_csv(file_path)
             all_clicks.append(df)
+
     if not all_clicks:
         raise RuntimeError("Aucun fichier de clic trouvé dans le dossier clicks/.")
+
     concatenated = pd.concat(all_clicks, ignore_index=True)
     print(f"Nombre total de clics : {len(concatenated)}")
     return concatenated
@@ -66,7 +74,7 @@ def init_data():
     if os.path.exists("clicks"):
         print(os.listdir("clicks"))
     else:
-        print("❌ Le dossier clicks n'existe pas")
+        print("Le dossier clicks n'existe pas")
 
     print("=== Initialisation des données ===")
     try:
