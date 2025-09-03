@@ -29,7 +29,8 @@ def load_embeddings():
 
 
 def load_metadata():
-    file_path = get_file_path("articles_metadata.csv")
+    base_dir = os.path.dirname(os.path.dirname(__file__))  # <- remonte d'un dossier
+    file_path =  os.path.join(base_dir, "articles_metadata.csv")
     print(f"Chemin metadata : {file_path}")
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Le fichier {file_path} est introuvable sur Azure.")
