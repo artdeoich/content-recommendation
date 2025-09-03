@@ -62,6 +62,12 @@ def init_data():
     if cold_start_done:
         return
 
+    print("📂 Contenu du dossier clicks/ sur Azure :")
+    if os.path.exists("clicks"):
+        print(os.listdir("clicks"))
+    else:
+        print("❌ Le dossier clicks n'existe pas")
+
     print("=== Initialisation des données ===")
     try:
         embeddings = load_embeddings()
@@ -115,9 +121,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         init_data()
 
         user_id = req.route_params.get("userId")
-        if not user_id:
-            req_body = req.get_json()
-            user_id = req_body.get("user_id")
 
         if not user_id:
             return func.HttpResponse(
