@@ -9,6 +9,13 @@ import pickle
 from utils import get_file_path
 import traceback
 
+# Variables globales initialisées à None
+embeddings = None
+metadata = None
+clicks = None
+cold_start_done = False
+
+
 # --- Chargement des fichiers avec vérification ---
 def load_embeddings():
     file_path = get_file_path("articles_embeddings.pkl")
@@ -20,6 +27,7 @@ def load_embeddings():
     print(f"Nombre d'embeddings chargés : {len(embeddings)}")
     return embeddings
 
+
 def load_metadata():
     file_path = "articles_metadata.csv"
     print(f"Chemin metadata : {file_path}")
@@ -28,6 +36,7 @@ def load_metadata():
     df = pd.read_csv(file_path)
     print(f"Nombre de lignes metadata : {len(df)}")
     return df
+
 
 def load_clicks():
     clicks_folder = "clicks"
@@ -46,25 +55,33 @@ def load_clicks():
     print(f"Nombre total de clics : {len(concatenated)}")
     return concatenated
 
-# --- Cold start avec vérification des correspondances ---
-try:
-    embeddings = load_embeddings()
-    metadata = load_metadata()
-    clicks = load_clicks()
 
-    if len(metadata) != len(embeddings):
-        raise ValueError(
-            f"Mismatch entre metadata ({len(metadata)} lignes) "
-            f"et embeddings ({len(embeddings)} éléments)."
-        )
+# --- Initialisation des données (appelée dans main) ---
+def init_data():
+    global embeddings, metadata, clicks, cold_start_done
+    if cold_start_done:
+        return
 
-    metadata["embedding"] = list(embeddings)
-    print("Chargement initial terminé ✅")
+    print("=== Initialisation des données ===")
+    try:
+        embeddings = load_embeddings()
+        metadata = load_metadata()
+        clicks = load_clicks()
 
-except Exception as e:
-    print("Erreur pendant le cold start : ", e)
-    traceback.print_exc()
-    raise
+        if len(metadata) != len(embeddings):
+            raise ValueError(
+                f"Mismatch entre metadata ({len(metadata)} lignes) "
+                f"et embeddings ({len(embeddings)} éléments)."
+            )
+
+        metadata["embedding"] = list(embeddings)
+        print("✅ Chargement initial terminé")
+        cold_start_done = True
+    except Exception as e:
+        print("❌ Erreur pendant l'initialisation :", e)
+        traceback.print_exc()
+        raise
+
 
 # --- Fonction de recommandation ---
 def recommend_for_user(user_id, top_k=5):
@@ -90,9 +107,13 @@ def recommend_for_user(user_id, top_k=5):
         traceback.print_exc()
         raise
 
+
 # --- Entrée HTTP Azure ---
 def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
+        # Initialisation retardée (cold start simulé à la première requête)
+        init_data()
+
         user_id = req.route_params.get("userId")
         if not user_id:
             req_body = req.get_json()
