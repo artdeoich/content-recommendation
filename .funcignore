@@ -1,1 +1,6 @@
 .venv
+*.pkl
+*.pickle
+*.ipynb
+file/*
+clicks/*
