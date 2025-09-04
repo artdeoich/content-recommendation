@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          lfs: true   #récupère automatiquement les fichiers LFS      
       
       - name: Pull LFS objects
         run: git lfs pull
