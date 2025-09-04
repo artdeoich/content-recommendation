@@ -10,6 +10,7 @@ from utils import get_file_path
 with open(get_file_path("recommendation_model_surprise.pkl"), "rb") as f:
     model = pickle.load(f)
 
+
 # --- Charger les données ---
 file_path = get_file_path("articles_metadata.csv")
 metadata = pd.read_csv(file_path)
