@@ -11,7 +11,9 @@ with open(get_file_path("recommendation_model_surprise.pkl"), "rb") as f:
     model = pickle.load(f)
 
 # --- Charger les données ---
-metadata = pd.read_csv(get_file_path("articles_metadata.csv"))
+base_dir = os.path.dirname(os.path.dirname(__file__))  # <- remonte d'un dossier
+file_path =  os.path.join(base_dir, "articles_metadata.csv")
+metadata = pd.read_csv(file_path)
 
 clicks = pd.concat(
     [pd.read_csv(os.path.join("clicks", f)) for f in os.listdir("clicks") if f.endswith(".csv")],

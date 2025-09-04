@@ -10,7 +10,9 @@ from scipy.sparse import coo_matrix
 from utils import get_file_path
 
 # --- Chargement des données ---
-metadata = pd.read_csv("articles_metadata.csv")
+base_dir = os.path.dirname(os.path.dirname(__file__))  # <- remonte d'un dossier
+file_path =  os.path.join(base_dir, "articles_metadata.csv")
+metadata = pd.read_csv(file_path)
 
 # concaténer tous les fichiers du dossier clicks/
 clicks = pd.concat(
