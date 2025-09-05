@@ -16,7 +16,6 @@ metadata = None
 clicks = None
 cold_start_done = False
 
-
 # --- Chargement des fichiers avec vérification ---
 def load_embeddings():
     file_path = get_file_path("articles_embeddings.pkl")
