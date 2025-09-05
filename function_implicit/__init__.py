@@ -19,31 +19,21 @@ metadata = pd.read_csv(file_path)
 # --- Chargement des fichiers clicks depuis Blob Storage ---
 def load_clicks_from_blob():
     """
-    Charge tous les fichiers CSV du dossier 'clicks/' accessible via get_file_path()
-    et les concatène en un seul DataFrame.
-    Fonctionne aussi bien en local qu'avec le montage /file sur Azure.
+    Charge le fichier Parquet 'clicks.parquet' depuis le dossier accessible via get_file_path().
+    Fonctionne en local ou sur Azure (/file/clicks.parquet).
     """
-    # Chemin du dossier clicks
-    clicks_folder = get_file_path("clicks")  # /file/clicks sur Azure ou ./file/clicks en local
-    print(f"🔍 Vérification du dossier clicks : {clicks_folder}")
+    # Chemin complet vers le fichier Parquet
+    clicks_file = get_file_path("clicks.parquet")  # /file/clicks.parquet sur Azure ou ./file/clicks.parquet en local
+    print(f"Vérification du fichier clicks : {clicks_file}")
 
-    if not os.path.exists(clicks_folder) or not os.path.isdir(clicks_folder):
-        raise FileNotFoundError(f"Le dossier {clicks_folder} est introuvable sur Azure ou en local.")
+    if not os.path.exists(clicks_file):
+        raise FileNotFoundError(f"Le fichier {clicks_file} est introuvable sur Azure ou en local.")
 
-    all_clicks = []
-    for filename in os.listdir(clicks_folder):
-        if filename.endswith(".csv"):
-            file_path = os.path.join(clicks_folder, filename)
-            print(f"Lecture du fichier : {file_path}")
-            df = pd.read_csv(file_path)
-            all_clicks.append(df)
+    # Lecture du fichier Parquet
+    clicks = pd.read_parquet(clicks_file)
+    print(f"Nombre total de clics chargés : {len(clicks)}")
 
-    if not all_clicks:
-        raise RuntimeError("Aucun fichier de clic trouvé dans le dossier clicks/.")
-
-    concatenated = pd.concat(all_clicks, ignore_index=True)
-    print(f"Nombre total de clics chargés : {len(concatenated)}")
-    return concatenated
+    return clicks
 
 clicks = load_clicks_from_blob()
 

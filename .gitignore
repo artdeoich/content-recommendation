@@ -50,3 +50,4 @@ __azurite_db*__.json
 file/*.pkl
 file/*.csv
 file/clicks/*.csv
+file/*.parquet
