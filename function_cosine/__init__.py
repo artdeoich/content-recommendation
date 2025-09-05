@@ -45,33 +45,29 @@ def load_metadata():
 
 def load_clicks():
     """
-    Charge tous les fichiers CSV du dossier clicks/ dans le container file du Blob Storage
+    Charge tous les fichiers CSV du dossier 'clicks/' accessible via get_file_path()
     et les concatène en un seul DataFrame.
     """
-    # --- Paramètres Blob Storage ---
-    connection_string = "<TA_CONNECTION_STRING>"  # mettre ta connexion Azure Storage
-    container_name = "file"  # le container où tu as mis clicks/
-    clicks_prefix = "clicks/"  # sous-dossier dans le container
+    # Chemin du dossier clicks
+    clicks_folder = get_file_path("clicks")  # retourne /file/clicks sur Azure ou ./file/clicks en local
+    print(f"🔍 Vérification du dossier clicks : {clicks_folder}")
 
-    print(f"🔍 Connexion au container '{container_name}' pour récupérer '{clicks_prefix}'")
-    blob_service_client = BlobServiceClient.from_connection_string(connection_string)
-    container_client = blob_service_client.get_container_client(container_name)
+    if not os.path.exists(clicks_folder) or not os.path.isdir(clicks_folder):
+        raise FileNotFoundError(f"Le dossier {clicks_folder} est introuvable sur Azure ou en local.")
 
     all_clicks = []
-    # Lister tous les blobs commençant par clicks/
-    for blob in container_client.list_blobs(name_starts_with=clicks_prefix):
-        if blob.name.endswith(".csv"):
-            print(f"➡️ Lecture du fichier blob : {blob.name}")
-            blob_client = container_client.get_blob_client(blob)
-            data = blob_client.download_blob().readall()
-            df = pd.read_csv(io.BytesIO(data))
+    for filename in os.listdir(clicks_folder):
+        if filename.endswith(".csv"):
+            file_path = os.path.join(clicks_folder, filename)
+            print(f"➡️ Lecture du fichier : {file_path}")
+            df = pd.read_csv(file_path)
             all_clicks.append(df)
 
     if not all_clicks:
-        raise RuntimeError(f"Aucun fichier CSV trouvé dans '{clicks_prefix}' du container '{container_name}'.")
+        raise RuntimeError("Aucun fichier de clic trouvé dans le dossier clicks/.")
 
     concatenated = pd.concat(all_clicks, ignore_index=True)
-    print(f"Nombre total de clics chargés : {len(concatenated)}")
+    print(f"Nombre total de clics : {len(concatenated)}")
     return concatenated
 
 # --- Initialisation des données (appelée dans main) ---
