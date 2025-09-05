@@ -49,4 +49,4 @@ __azurite_db*__.json
 
 file/*.pkl
 file/*.csv
-clicks/*.csv
+file/clicks/*.csv

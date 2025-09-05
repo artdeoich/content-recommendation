@@ -8,6 +8,8 @@ import os
 import pickle
 from utils import get_file_path
 import traceback
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 
 # Variables globales initialisées à None
 embeddings = None

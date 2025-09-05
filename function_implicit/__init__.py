@@ -9,6 +9,8 @@ from implicit.als import AlternatingLeastSquares
 from scipy.sparse import coo_matrix
 from azure.storage.blob import BlobServiceClient
 from utils import get_file_path
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 
 # --- Chargement metadata depuis LFS / file ---
 file_path = get_file_path("articles_metadata.csv")
