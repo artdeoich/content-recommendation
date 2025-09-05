@@ -7,19 +7,41 @@ import os
 import pickle
 from implicit.als import AlternatingLeastSquares
 from scipy.sparse import coo_matrix
+from azure.storage.blob import BlobServiceClient
 from utils import get_file_path
 
-# --- Chargement des données ---
+# --- Chargement metadata depuis LFS / file ---
 file_path = get_file_path("articles_metadata.csv")
 metadata = pd.read_csv(file_path)
 
-# concaténer tous les fichiers du dossier clicks/
-clicks = pd.concat(
-    [pd.read_csv(os.path.join("clicks", f)) for f in os.listdir("clicks") if f.endswith(".csv")],
-    ignore_index=True
-)
+# --- Chargement des fichiers clicks depuis Blob Storage ---
+def load_clicks_from_blob():
+    connection_string = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
+    container_name = "file"
+    clicks_prefix = "clicks/"  # sous-dossier dans le container
 
-# Construction matrice utilisateur-article
+    blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+    container_client = blob_service_client.get_container_client(container_name)
+
+    all_clicks = []
+    for blob in container_client.list_blobs(name_starts_with=clicks_prefix):
+        if blob.name.endswith(".csv"):
+            print(f"➡️ Lecture du blob : {blob.name}")
+            blob_client = container_client.get_blob_client(blob)
+            data = blob_client.download_blob().readall()
+            df = pd.read_csv(io.BytesIO(data))
+            all_clicks.append(df)
+
+    if not all_clicks:
+        raise RuntimeError(f"Aucun fichier CSV trouvé dans '{clicks_prefix}' du container '{container_name}'.")
+
+    concatenated = pd.concat(all_clicks, ignore_index=True)
+    print(f"Nombre total de clics chargés : {len(concatenated)}")
+    return concatenated
+
+clicks = load_clicks_from_blob()
+
+# --- Construction matrice utilisateur-article ---
 user_ids = clicks["user_id"].astype("category")
 article_ids = clicks["click_article_id"].astype("category")
 user_map = dict(enumerate(user_ids.cat.categories))
