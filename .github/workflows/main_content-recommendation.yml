@@ -10,6 +10,10 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: azure-deploy
+  cancel-in-progress: true
+
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   PYTHON_VERSION: '3.10' # set this to the python version to use (supports 3.6, 3.7, 3.8)
@@ -77,6 +81,15 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_55C55DE4B08440F999AF3307F43BE941 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_97D1A6A14169400BB6778501508306E3 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_872E4EF31C4940129FF3DB50E70628F4 }}
+      
+      - name: Clean repo before deploy
+        run: |
+          rm -rf .git
+          rm -rf __pycache__
+          rm -rf .venv
+      
+      - name: Check package size
+        run: du -sh .
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
@@ -85,4 +98,6 @@ jobs:
           app-name: 'content-recommendation'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+      
+
           
