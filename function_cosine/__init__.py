@@ -8,7 +8,6 @@ import os
 import pickle
 from utils import get_file_path
 import traceback
-from azure.storage.blob import BlobServiceClient
 
 # Variables globales initialisées à None
 embeddings = None
